@@ -1,0 +1,16 @@
+---
+- name: install  apache webserver
+  yum:
+    name: httpd
+    update_cache: yes
+    state: present
+  notify: restart_httpd
+
+- name: creating index.html
+  shell: "echo $HOSTNAME > index.html && cp index.html /var/www/html/index.html"
+
+- name: coping file and permission
+  file: 
+    mode: 0444
+    path: /var/www/html/index.html
+    state: file

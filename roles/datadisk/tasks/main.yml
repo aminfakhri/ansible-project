@@ -1,0 +1,30 @@
+# ---
+    - name: Create a new primary partition
+      parted:
+        device: "{{ item.device }}"
+        number:  "{{ item.number }}"
+        state: present
+        part_start: "{{ item.part_start }}"
+        part_end: "{{ item.part_end }}"
+      loop: "{{ diskinfo }}"
+
+    - name: Create directory /part{1-2} if does not exist
+      file:
+        path: "{{ item.path }}"
+        state: directory
+        mode: '0755'
+      loop: "{{ diskinfo }}"
+
+    - name: Create a xfs filesystem on /dev/sdc1
+      filesystem:
+        fstype: "{{ item.fstype }}"
+        dev: "{{ item.partition }}"
+      loop: "{{ diskinfo }}"
+
+    - name: Mount sdc1 to dir /part1
+      mount:
+        path: "{{ item.path }}"
+        src: "{{ item.partition }}"
+        fstype: "{{ item.fstype }}"
+        state: mounted
+      loop: "{{ diskinfo }}"

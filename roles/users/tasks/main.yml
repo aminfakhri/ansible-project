@@ -1,0 +1,33 @@
+
+---
+- name: Create group for linux
+  group:
+    name: "{{groupname}}"
+    state: present
+
+- name: sudo without password for wheel group
+  copy:
+    content: '%wheel ALL=(ALL:ALL) NOPASSWD:ALL'
+    dest: /etc/sudoers.d/wheel_nopasswd
+    mode: 0440
+    validate: '/usr/sbin/visudo -cf %s'
+   
+- name: creating users and generate SSH key 
+  user:
+    name: "{{item}}"
+    generate_ssh_key: yes
+    ssh_key_file: .ssh/id_rsa
+    state: present
+    append: yes
+    shell: /bin/bash
+    group: "{{groupname}}"
+    groups: wheel
+    home: /home/{{item}} 
+  loop: "{{userlist}}"
+
+- name: create users
+  authorized_key:
+    user: "{{ item }}"
+    state: present
+    key: "{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
+  loop: "{{ userlist }}"

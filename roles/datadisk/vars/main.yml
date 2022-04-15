@@ -1,0 +1,18 @@
+---
+# vars file for datadisk
+diskinfo:
+  - device: /dev/sdc
+    number: 1
+    part_start: 1MiB
+    part_end: 4GiB
+    path: /part1
+    partition: /dev/sdc1
+    fstype: xfs
+
+  - device: /dev/sdc
+    number: 2
+    part_start: 5GiB 
+    part_end: 10GiB
+    path: /part2
+    partition: /dev/sdc2
+    fstype: ext4

@@ -1,0 +1,16 @@
+[linux]
+linux1.canadacentral.cloudapp.azure.com
+linux2.canadacentral.cloudapp.azure.com
+[windows]
+winvm.canadacentral.cloudapp.azure.com
+
+[all:children]
+linux
+windows
+
+[windows:vars]
+ansible_user = auto
+ansible_password =  "P@$$w0rd1234!"
+ansible_connection = winrm
+ansible_winrm_transport = ntlm
+ansible_winrm_server_cert_validation = ignore
